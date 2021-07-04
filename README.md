@@ -1,3 +1,5 @@
+[![Crate](https://img.shields.io/crates/v/query_external_ip.svg)](https://crates.io/crates/query_external_ip)
+[![Docs](https://docs.rs/query_external_ip/badge.svg)](https://docs.rs/query_external_ip)
 # query_external_ip
 
 Get the external IPv4 and IPv6 of the computer.
