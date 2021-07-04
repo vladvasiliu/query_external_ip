@@ -9,6 +9,7 @@ use std::net::IpAddr;
 use std::option::Option::None;
 use std::time::Duration;
 
+/// A Vec of known IP address sources
 static HTTP_SOURCES: Lazy<Vec<HttpSource>> = Lazy::new(|| {
     [
         "https://icanhazip.com/",
@@ -40,11 +41,13 @@ static HTTP_SOURCES: Lazy<Vec<HttpSource>> = Lazy::new(|| {
     .collect()
 });
 
+/// An HTTP client used to query multiple IP sources.
 pub struct Http {
     client: Client,
 }
 
 impl Http {
+    /// Create a new client wrapping a `reqwest` client with a 2 second timeout.
     pub fn new() -> Result<Self> {
         let client = reqwest::ClientBuilder::new()
             .timeout(Duration::from_secs(2))
@@ -52,6 +55,7 @@ impl Http {
         Ok(Self { client })
     }
 
+    /// Get the IPs as returned by the services
     pub(crate) async fn get_ips(&self) -> Vec<IpAddr> {
         // Build a stream of futures
         let ip_stream = stream::iter(HTTP_SOURCES.iter().map(|src| {

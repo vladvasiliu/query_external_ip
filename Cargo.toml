@@ -1,6 +1,6 @@
 [package]
 name = "query_external_ip"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 authors = ["Vlad Vasiliu"]
 license = "BSD-3-Clause"

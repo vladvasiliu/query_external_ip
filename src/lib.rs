@@ -1,11 +1,28 @@
+//! # query_external_ip
+//!
+//! Get the external IPv4 and IPv6 of the computer by querying online services.
+//!
+//! ## Example
+//!
+//! ```
+//! use query_external_ip::Consensus;
+//!
+//! async fn get_ip() {
+//!     match Consensus::get().await {
+//!         Ok(c) => println!("{:#?}", c),
+//!         Err(err) => println!("{}", err),
+//!     }
+//! }
+//! ```
 mod source;
 
 use std::collections::HashMap;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use crate::source::http::Http;
-use crate::source::Result;
+pub use crate::source::{Result, SourceError};
 
+/// A consensus on what the external IPv4 and IPv6 is.
 #[derive(Debug)]
 pub struct Consensus {
     v4: Option<Ipv4Addr>,
@@ -13,7 +30,7 @@ pub struct Consensus {
 }
 
 impl Consensus {
-    pub fn from_ips<T: IntoIterator<Item = IpAddr>>(ips: T) -> Self {
+    fn from_ips<T: IntoIterator<Item = IpAddr>>(ips: T) -> Self {
         let mut votes_v4 = HashMap::new();
         let mut votes_v6 = HashMap::new();
         for ip in ips {
@@ -33,6 +50,14 @@ impl Consensus {
         let http_source = Http::new()?;
         let ips = http_source.get_ips().await;
         Ok(Self::from_ips(ips))
+    }
+
+    pub fn v4(&self) -> Option<Ipv4Addr> {
+        self.v4
+    }
+
+    pub fn v6(&self) -> Option<Ipv6Addr> {
+        self.v6
     }
 }
 
